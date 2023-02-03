@@ -1,0 +1,49 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.8'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'org.liquibase.gradle' version '2.0.4'
+}
+
+
+group = 'link.hiroshisprojects'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.liquibase:liquibase-core'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'org.postgresql:postgresql'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	liquibaseRuntime 'org.postgresql:postgresql'
+	liquibaseRuntime 'org.liquibase:liquibase-core:4.2.2'
+}
+
+liquibase {
+  activities {
+    main {
+          changeLogFile "./src/main/resources/db/changelog/changelog-root.xml"
+		  url "jdbc:postgresql://localhost:5432/kaput" 
+          username "postgres"
+          password "password"
+    }
+  }
+}
+tasks.named('test') {
+	useJUnitPlatform()
+}
