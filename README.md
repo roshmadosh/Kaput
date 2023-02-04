@@ -1,4 +1,4 @@
-# Kaput: A Simple Web Application for Tracking Job Applications
+# Kaput: A Simple Web Interface for Tracking Job Applications
 ---
 
 The app is named after the sound my car makes, which I'm hoping to replace once 
