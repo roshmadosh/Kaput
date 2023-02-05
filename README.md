@@ -9,12 +9,13 @@ Requirements:
 - PostgreSQL v14+ (will replace once Docker set up)
 
 You will have to first create a database named `kaput` in PostgreSQL, then update the DB credentials 
-in `build.gradle` and `application.properties`. PostgreSQL's init scripts are a pain to write compared 
-to MySQL, which is why I don't include them atm.  
+in `build.gradle` (under the liquibase task) and `application.properties`.  
 
-With this the application should run locally by executing the command `gradlew runBoot` from 
-the project root directory. Once the app is up and running, go to `localhost:8080` 
-from a browser.  
+With the DB created and credentials updated, Liquibase should read `changelog-root.xml` to initialize the 
+tables and data for you.
+
+Run locally by executing the command `gradlew runBoot` from the project root directory. Once the app is up and 
+running, go to `localhost:8080` from a browser.  
 
 Only two entites are needed for this application.  
 ![entity-relationship diagram](./erd.png)  

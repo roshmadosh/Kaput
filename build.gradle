@@ -40,10 +40,10 @@ dependencies {
 liquibase {
   activities {
     main {
-          changeLogFile "./src/main/resources/db/changelog-root.xml"
-		  url "jdbc:postgresql://localhost:5432/kaput" 
-          username "postgres"
-          password "password"
+			changeLogFile "./src/main/resources/db/changelog-root.xml"
+			url "jdbc:postgresql://localhost:5432/kaput" 
+			username "postgres"
+			password "password"
     }
   }
 }

@@ -31,6 +31,12 @@ public class User {
 	@NotEmpty(message = "You must provide a password!")
 	private String password;
 
+	public User(String email, String firstName, String lastName, String password) {
+		this.email = email;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.password = password;
+	}
 
 	public long getId() {
 		return id;
@@ -74,13 +80,5 @@ public class User {
 
 	public User() {
 	}
-
-	public User(String email, String firstName, String lastName, String password) {
-		this.email = email;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.password = password;
-	}
-
 
 }

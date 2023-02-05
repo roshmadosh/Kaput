@@ -5,7 +5,7 @@ import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 
 public interface UserService {
-	public User save(User userDto) throws ConstraintViolationException;
+	public User save(User user) throws ConstraintViolationException;
 
 	public Iterable<User> getAll();
 
