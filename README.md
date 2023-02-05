@@ -20,4 +20,14 @@ running, go to `localhost:8080` from a browser.
 Only two entites are needed for this application.  
 ![entity-relationship diagram](./erd.png)  
 
+Exception handling is composed of two parts:
+1. Providing a custom exception response body
+2. Keeping the `RestControllerAdvice` class DRY by creating a `CustomException` class
 
+The `CustomException` class is an abstract class that needs a `getStatusCode` method implemented. This 
+allows for single "joinpoint" for a general group of exceptions, and not having to define one for each 
+status code.  
+
+One pain-point with this strategy is the inheritance tree is a bit long, where `Exception` -> `CustomException` -> 
+`UserException` -> `UserNotFoundException`. I didn't know how to pass down every overloaded constructor from `Exception` 
+down to the implemenation classes without having to define them in the intermediate classes, which feels very repetitve.  
