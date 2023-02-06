@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="users")
@@ -22,9 +23,11 @@ public class User {
 	@NotEmpty(message = "Email cannot be empty!")
 	private String email;
 	
+	@Size(min = 2, max = 55)
 	@NotEmpty(message = "First name cannot be empty!")
 	private String firstName;
 
+	@Size(min = 2, max = 55)
 	@NotEmpty(message = "Last name cannot be empty!")
 	private String lastName;
 

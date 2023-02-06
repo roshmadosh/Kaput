@@ -36,6 +36,9 @@ dependencies {
 	liquibaseRuntime 'org.liquibase:liquibase-core:4.2.2'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// swagger docs
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.14'
 }
 
 liquibase {

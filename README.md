@@ -35,11 +35,17 @@ down to the implemenation classes without having to define them in the intermedi
 
 ### Validation
 Both the data access and controller layers rely on the `javax.validation` annotations, but only the data access layer uses  
-the validation constraints imposed by the `javax.persistence` annotations (e.g. `@Column(unique = true)`).  
+the validation constraints imposed by the `javax.persistence` annotations.
 
-This can be confirmed by observing how the overriden `handleMethodArgumentNotValid` joinpoint doesn't recognize when a 
-duplicate email is provided. We know this because the response body message is not a stringified list of `defaultMessage`s.  
+For example, a duplicate email POST request bypasses our exception handlers because it uses the `@Column` annotation to impose uniqueness.
 
 Note that we override `handleMethodArgumentNotValid` in our `CustomResponseEntityExceptionHandler` because if we don't, the default 
-implementation doesn't return a `ResponseEntity`, and so we don't get a response body.
+implementation doesn't return a `ResponseEntity`, and so we don't get a response body.  
+
+Another benefit of validating at the controller level is that the `Exception` object from `handleMethodArgumentNotValid` offers several 
+convenience methods, which allow us to do things like return the default message for _each_ validation error to the API consumer.  
+
+### Swagger Docs 
+The Swagger UI can be accessed while the app is running from `http://localhost:8080/swagger-ui/index.html`. The Open API spec can be accessed 
+from `http://localhost:8080/v3/api-docs`. Hoping to include [Slate](https://github.com/slatedocs/slate) eventually.  
 
