@@ -49,3 +49,9 @@ convenience methods, which allow us to do things like return the default message
 The Swagger UI can be accessed while the app is running from `http://localhost:8080/swagger-ui/index.html`. The Open API spec can be accessed 
 from `http://localhost:8080/v3/api-docs`. Hoping to include [Slate](https://github.com/slatedocs/slate) eventually.  
 
+### Content Negotiation
+- XML Response Format
+Added just two dependencies to allow XML-formatted responses. Get XML responses by providing the request header `Accept: application/xml` from  
+`curl`/Postman/Talend.   
+
+
