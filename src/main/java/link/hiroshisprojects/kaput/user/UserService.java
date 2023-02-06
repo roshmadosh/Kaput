@@ -11,4 +11,5 @@ public interface UserService {
 
 	public Optional<User> findUserById(long id);
 
+	public void deleteUserById(long id);
 }

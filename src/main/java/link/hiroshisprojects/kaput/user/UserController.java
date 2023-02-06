@@ -7,9 +7,11 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,7 +44,7 @@ public class UserController {
 
 		
 	@PostMapping
-	public ResponseEntity<User> saveUser(@RequestBody User user) throws UserValidationException {
+	public ResponseEntity<User> saveUser(@Valid @RequestBody User user) throws UserValidationException {
 		try {
 			User savedUser = userService.save(user);
 			URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -55,6 +57,11 @@ public class UserController {
 		} catch (Exception e) {
 			throw new UserValidationException("User field validation failed. " + e.getMessage());
 		}
+	}
+
+	@DeleteMapping("/{id}")
+	public void deleteUserById(@PathVariable long id) {
+		userService.deleteUserById(id);
 	}
 
 

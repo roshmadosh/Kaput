@@ -9,8 +9,8 @@ public class CustomExceptionResponseBody {
 
 	private LocalDateTime dateTime;
 	private String message;
-	public CustomExceptionResponseBody(LocalDateTime dateTime, String message) {
-		this.dateTime = dateTime;
+	public CustomExceptionResponseBody(String message) {
+		this.dateTime = LocalDateTime.now();
 		this.message = message;
 	}
 	public LocalDateTime getDateTime() {
