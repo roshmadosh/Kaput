@@ -18,7 +18,7 @@ Run locally by executing the command `gradlew runBoot` from the project root dir
 running, go to `localhost:8080` from a browser.  
 
 Only two entites are needed for this application.  
-![entity-relationship diagram](./erd.png)  
+![entity-relationship diagram](./img/erd.png)
 
 ### Exception Handling
 Exception handling is composed of two parts:
@@ -58,5 +58,6 @@ Added just two dependencies to allow XML-formatted responses. Get XML responses 
 Most endpoints should respond as HAL + JSON media type, with links to relevant resources. Wasn't sure how to implement a proper representation 
 model (i.e. HAL-compliant response body) for DELETE methods because JPA's `CrudRepository` API doesn't return the deleted resource.  
 
+![hal+json for GET /users](./img/hateoas.png)  
 
 
