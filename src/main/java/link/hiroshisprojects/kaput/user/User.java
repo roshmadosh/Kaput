@@ -10,9 +10,11 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import org.springframework.hateoas.RepresentationModel;
+
 @Entity
 @Table(name="users")
-public class User {
+public class User extends RepresentationModel<User>{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

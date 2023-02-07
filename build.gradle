@@ -27,6 +27,10 @@ dependencies {
 
 	runtimeOnly 'org.postgresql:postgresql'
 
+	// hateoas
+	implementation 'org.springframework.hateoas:spring-hateoas:1.5.2'
+
+
 	// enable XML format responses
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.4'
 	// recommended by fasterxml docs to include this dep
