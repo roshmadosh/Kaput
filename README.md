@@ -50,8 +50,13 @@ The Swagger UI can be accessed while the app is running from `http://localhost:8
 from `http://localhost:8080/v3/api-docs`. Hoping to include [Slate](https://github.com/slatedocs/slate) eventually.  
 
 ### Content Negotiation
-- XML Response Format
+- XML Response Format  
 Added just two dependencies to allow XML-formatted responses. Get XML responses by providing the request header `Accept: application/xml` from  
 `curl`/Postman/Talend.   
+
+### HATEOAS
+Most endpoints should respond as HAL + JSON media type, with links to relevant resources. Wasn't sure how to implement a proper representation 
+model (i.e. HAL-compliant response body) for DELETE methods because JPA's `CrudRepository` API doesn't return the deleted resource.  
+
 
 

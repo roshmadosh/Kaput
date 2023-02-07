@@ -33,7 +33,7 @@ public class UserController {
 		// DAO access
 		Iterable<User> users = userService.getAll();
 
-		// add links to representation models (HATEAOS)
+		// add links to representation models (HATEOAS)
 		for (User user: users) {
 			Link link = linkTo(this.getClass()).slash(user.getId()).withSelfRel();
 			user.add(link);
@@ -50,9 +50,11 @@ public class UserController {
 		return resp;
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping(value = "/{id}", produces = "application/hal+json")
 	public ResponseEntity<User> getUserById(@PathVariable long id) throws UserNotFoundException {
 		User user = userService.findUserById(id).orElseThrow(() -> new UserNotFoundException(String.format("User with ID %s not found.", id)));
+		Link link = linkTo(this.getClass()).slash(id).withSelfRel();
+		user.add(link);
 		return ResponseEntity.ok().body(user);
 	}
 
@@ -73,9 +75,11 @@ public class UserController {
 		}
 	}
 
-	@DeleteMapping("/{id}")
+	/* Not sure how to incorporate HATEOAS here b/c JPA's delete method doesn't return the object. */
+	@DeleteMapping(value = "/{id}")
 	public void deleteUserById(@PathVariable long id) {
 		userService.deleteUserById(id);
+		
 	}
 
 
