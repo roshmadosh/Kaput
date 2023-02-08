@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.validation.ConstraintViolationException;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +18,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User save(User user) throws ConstraintViolationException {
+		String encrypted = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10));
+		user.setPassword(encrypted);
+
 		return userDao.save(user);
 	}
 
