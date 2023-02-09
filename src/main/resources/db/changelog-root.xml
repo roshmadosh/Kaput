@@ -14,6 +14,4 @@
     <changeSet author="hiroshin (generated)" id="1675486307400-2">
         <addUniqueConstraint columnNames="email" constraintName="uk_6dotkott2kjsp8vw4d0m25fb7" tableName="users"/>
     </changeSet>
-
-		<include file="classpath:/db/insert-users.xml"/>
 </databaseChangeLog>
