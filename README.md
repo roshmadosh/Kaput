@@ -60,4 +60,7 @@ model (i.e. HAL-compliant response body) for DELETE methods because JPA's `CrudR
 
 ![hal+json for GET /users](./img/hateoas.png)  
 
+### Liquibase  
+Took a minute to understand distinction between recording DB credentials via `spring.liquibase.*` in `application.properties` and as arguments for the liquibase Gradle plugin. The former can be used for bootstrapping your DB on application start, the latter is for running Gradle tasks like `generateChangeLog`. One pain point I could _not_ resolve is how the plugin resolves the path you give for the `changelogFile` parameter, as the same path seems to work some tasks but not for others.  
+
 

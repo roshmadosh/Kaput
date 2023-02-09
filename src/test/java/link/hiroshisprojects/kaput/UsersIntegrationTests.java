@@ -16,7 +16,7 @@ import link.hiroshisprojects.kaput.user.UserService;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class KaputApplicationTests {
+class UsersIntegrationTests {
 
 	@Autowired
 	UserService userService;
