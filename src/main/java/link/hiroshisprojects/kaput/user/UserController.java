@@ -1,6 +1,7 @@
 package link.hiroshisprojects.kaput.user;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -14,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import link.hiroshisprojects.kaput.jobApplication.JobApplication;
+import link.hiroshisprojects.kaput.jobApplication.JobApplications;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
@@ -55,6 +60,10 @@ public class UserController {
 		User user = userService.findUserById(id).orElseThrow(() -> new UserNotFoundException(String.format("User with ID %s not found.", id)));
 		Link link = linkTo(this.getClass()).slash(id).withSelfRel();
 		user.add(link);
+
+		Link appsLink = linkTo(methodOn(this.getClass()).getJobApplications(id)).withRel("job_applications");
+		user.add(appsLink);
+
 		return ResponseEntity.ok().body(user);
 	}
 
@@ -82,7 +91,28 @@ public class UserController {
 		
 	}
 
+	@GetMapping(value= "/{userId}/applications")
+	public JobApplications getJobApplications(@PathVariable long userId) {
 
+		JobApplications resp = new JobApplications();
+
+		List<JobApplication> applications = userService.getApplicationsByUserId(userId);
+
+		// add links to representation models (HATEOAS)
+		for (JobApplication application: applications) {
+			Link link = linkTo(methodOn(this.getClass()).getJobApplications(userId)).slash(application.getId()).withSelfRel();
+			application.add(link);
+
+			resp.getApplications().add(application);
+		}
+
+		// link for the endpoint itself
+		Link selfLink = linkTo(methodOn(this.getClass()).getJobApplications(userId)).withSelfRel();
+
+		resp.add(selfLink);
+
+		return resp;
 	
+	}
 	
 }

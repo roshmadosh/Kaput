@@ -48,12 +48,12 @@ public class JobApplication extends RepresentationModel<JobApplication> {
 	@NotEmpty(message = "Status is required!")
 	private ApplicationStatus status;
 
-	public JobApplication(User user, String jobTitle, String companyName, LocalDate dateApplied, ApplicationStatus status) {
+	public JobApplication(User user, String jobTitle, String companyName, LocalDate dateApplied) {
 		this.user = user;
 		this.jobTitle = jobTitle;
 		this.dateApplied = dateApplied;
-		this.status = status;
 		this.companyName = companyName;
+		this.status = ApplicationStatus.NOT_RESPONDED;
 	}
 
 	public User getUser() {

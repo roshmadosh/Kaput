@@ -1,19 +1,26 @@
 package link.hiroshisprojects.kaput.user;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.validation.ConstraintViolationException;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import link.hiroshisprojects.kaput.jobApplication.JobApplication;
+import link.hiroshisprojects.kaput.jobApplication.JobApplicationDao;
+
 @Service
 public class UserServiceImpl implements UserService {
 
 	private UserDao userDao;
+	private JobApplicationDao applicationsDao;
 
-	public UserServiceImpl(UserDao userDao) {
+	public UserServiceImpl(UserDao userDao, JobApplicationDao applicationsDao) {
 		this.userDao = userDao;
+		this.applicationsDao = applicationsDao;
 	}
 
 	@Override
@@ -37,6 +44,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void deleteUserById(long id) {
 		userDao.deleteById(id);
+	}
+
+	@Override
+	public List<JobApplication> getApplicationsByUserId(long userId) {
+		return applicationsDao.findByUserId(userId); 
 	}
 
 
