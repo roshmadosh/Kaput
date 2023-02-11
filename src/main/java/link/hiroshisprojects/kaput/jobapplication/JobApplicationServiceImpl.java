@@ -1,8 +1,7 @@
-package link.hiroshisprojects.kaput.jobApplication;
+package link.hiroshisprojects.kaput.jobapplication;
 
+import java.util.List;
 import java.util.Optional;
-
-import javax.validation.ConstraintViolationException;
 
 import org.springframework.stereotype.Service;
 
@@ -14,29 +13,27 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 	public JobApplicationServiceImpl(JobApplicationDao applicationDao) {
 		this.applicationDao = applicationDao;
 	}
-
-	@Override
-	public JobApplication save(JobApplication application) throws ConstraintViolationException {
-		JobApplication savedAppliciation = applicationDao.save(application);
-		return savedAppliciation;
-	}
+	
 
 	@Override
 	public Iterable<JobApplication> getAll() {
-		Iterable<JobApplication> applications = applicationDao.findAll();
-		return applications;
+		return applicationDao.findAll();
 	}
 
 	@Override
 	public Optional<JobApplication> findJobApplicationById(long id) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+		return applicationDao.findById(id);
 	}
 
 	@Override
 	public void deleteJobApplicationById(long id) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public List<JobApplication> findJobApplicationsByUserId(long userId) {
+		return applicationDao.findByUserId(userId);
 	}
 
 }

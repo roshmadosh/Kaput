@@ -1,4 +1,4 @@
-package link.hiroshisprojects.kaput.jobApplication;
+package link.hiroshisprojects.kaput.jobapplication;
 
 import java.util.List;
 

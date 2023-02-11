@@ -1,16 +1,15 @@
-package link.hiroshisprojects.kaput.jobApplication;
+package link.hiroshisprojects.kaput.jobapplication;
 
+import java.util.List;
 import java.util.Optional;
 
-import javax.validation.ConstraintViolationException;
-
 public interface JobApplicationService {
-
-	public JobApplication save(JobApplication application) throws ConstraintViolationException;	
 
 	public Iterable<JobApplication> getAll();
 
 	public Optional<JobApplication> findJobApplicationById(long id);
+
+	public List<JobApplication> findJobApplicationsByUserId(long userId);
 
 	public void deleteJobApplicationById(long id);
 

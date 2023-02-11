@@ -1,4 +1,4 @@
-package link.hiroshisprojects.kaput.jobApplication;
+package link.hiroshisprojects.kaput.jobapplication;
 
 import java.time.LocalDate;
 
@@ -7,7 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +15,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
 import org.springframework.hateoas.RepresentationModel;
@@ -47,7 +47,7 @@ public class JobApplication extends RepresentationModel<JobApplication> {
 	private String companyName;
 
 	@Column(name="date_applied", nullable = false)
-	@Past(message = "Invalid date given for field 'dateApplied'.")
+	@PastOrPresent(message = "Invalid date given for field 'dateApplied'.")
   @JsonFormat(pattern = "MM/dd/yyyy")
 	@NotNull(message = "Field 'dateApplied' must be provided, format is MM/dd/yyyy.")
 	@Basic

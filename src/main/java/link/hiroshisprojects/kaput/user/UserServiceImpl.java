@@ -2,25 +2,22 @@ package link.hiroshisprojects.kaput.user;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.validation.ConstraintViolationException;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import link.hiroshisprojects.kaput.jobApplication.JobApplication;
-import link.hiroshisprojects.kaput.jobApplication.JobApplicationDao;
+import link.hiroshisprojects.kaput.jobapplication.JobApplication;
+import link.hiroshisprojects.kaput.jobapplication.JobApplicationDao;
 
 @Service
 public class UserServiceImpl implements UserService {
 
 	private UserDao userDao;
-	private JobApplicationDao applicationsDao;
 
-	public UserServiceImpl(UserDao userDao, JobApplicationDao applicationsDao) {
+	public UserServiceImpl(UserDao userDao) {
 		this.userDao = userDao;
-		this.applicationsDao = applicationsDao;
 	}
 
 	@Override
@@ -45,18 +42,18 @@ public class UserServiceImpl implements UserService {
 	public void deleteUserById(long id) {
 		userDao.deleteById(id);
 	}
+	
 
 	@Override
-	public List<JobApplication> getApplicationsByUserId(long userId) {
-		return applicationsDao.findByUserId(userId); 
-	}
-
-	@Override
-	public User addApplicationByUserId(long userId, JobApplication application) throws UserException {
+	public JobApplication addApplicationByUserId(long userId, JobApplication application) throws UserException {
+		// throw an exception early if user ID not found
 		User user = userDao.findById(userId).orElseThrow(() -> new UserNotFoundException("Cannot find user with ID " + userId));
-		user.addJobApplication(application);
-		return userDao.save(user);
-	}
 
+		user.addJobApplication(application);
+		List<JobApplication> applications = userDao.save(user).getJobApplications();
+
+		// saved application should be the last one added to the list 
+		return applications.get(applications.size() - 1);
+	}
 	
 }

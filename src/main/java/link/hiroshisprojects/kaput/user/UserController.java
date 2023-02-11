@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import link.hiroshisprojects.kaput.jobApplication.JobApplication;
-import link.hiroshisprojects.kaput.jobApplication.JobApplications;
+import link.hiroshisprojects.kaput.jobapplication.JobApplicationService;
+import link.hiroshisprojects.kaput.jobapplication.JobApplicationNotFoundException;
+import link.hiroshisprojects.kaput.jobapplication.JobApplicationException;
+import link.hiroshisprojects.kaput.jobapplication.JobApplication;
+import link.hiroshisprojects.kaput.jobapplication.JobApplications;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
@@ -26,9 +29,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 public class UserController {
 
 	private UserService userService;
+	private JobApplicationService appService;
 
-	public UserController(UserService userService) {
+	public UserController(UserService userService, JobApplicationService appService) {
 		this.userService = userService;
+		this.appService = appService;
 	}
 
 	@GetMapping
@@ -96,7 +101,7 @@ public class UserController {
 
 		JobApplications resp = new JobApplications();
 
-		List<JobApplication> applications = userService.getApplicationsByUserId(userId);
+		List<JobApplication> applications = appService.findJobApplicationsByUserId(userId);
 
 		// add links to representation models (HATEOAS)
 		for (JobApplication application: applications) {
@@ -115,10 +120,30 @@ public class UserController {
 	
 	}
 
+	@GetMapping("/{userId}/applications/{appId}")
+	public JobApplication getApplicationByUserId(@PathVariable long userId, @PathVariable long appId) throws JobApplicationNotFoundException {
+		String errorMessage = "Job Application with ID " + appId + " not found.";
+		JobApplication application = appService.findJobApplicationById(appId).orElseThrow(() -> new JobApplicationNotFoundException(errorMessage));
+		
+		Link selfLink = linkTo(methodOn(this.getClass()).getApplicationByUserId(userId, appId)).withSelfRel();
+		Link allLink = linkTo(methodOn(this.getClass()).getJobApplications(userId)).withRel("all");
+
+		application.add(selfLink, allLink);
+
+		return application;
+	}
+
 	@PostMapping("/{userId}/applications")
-	public User saveApplicationForUser(@PathVariable long userId, @Valid @RequestBody JobApplication application) throws UserException {
-		User user = userService.addApplicationByUserId(userId, application);	
-		return user;
+	public JobApplication saveApplicationForUser(@PathVariable long userId, @Valid @RequestBody JobApplication application) throws UserException, JobApplicationException {
+		JobApplication savedApp = userService.addApplicationByUserId(userId, application);	
+
+		Link createdLink = linkTo(methodOn(this.getClass()).getApplicationByUserId(userId, savedApp.getId())).withRel("created");
+		Link allLink = linkTo(methodOn(this.getClass()).getJobApplications(userId)).withRel("all");
+
+		savedApp.add(createdLink, allLink);
+
+		return savedApp;
+		
 	}
 	
 	

@@ -1,7 +1,7 @@
 package link.hiroshisprojects.kaput.user;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,7 +19,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import link.hiroshisprojects.kaput.jobApplication.JobApplication;
+import link.hiroshisprojects.kaput.jobapplication.JobApplication;
 
 @Entity
 @Table(name="users")
@@ -50,7 +50,7 @@ public class User extends RepresentationModel<User>{
 		mappedBy = "user",
 		cascade = { CascadeType.MERGE, CascadeType.REMOVE })
 	@JsonIgnore
-	private Set<JobApplication> jobApplications;
+	private List<JobApplication> jobApplications;
 
 	public User() {
 	}
@@ -60,7 +60,7 @@ public class User extends RepresentationModel<User>{
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.password = password;
-		this.jobApplications = new HashSet<>();
+		this.jobApplications = new ArrayList<>();
 	}
 
 	public void	addJobApplication(JobApplication application) throws UserValidationException {
@@ -116,7 +116,7 @@ public class User extends RepresentationModel<User>{
 		this.password = password;
 	}
 
-	public Set<JobApplication> getJobApplications() {
+	public List<JobApplication> getJobApplications() {
 		return jobApplications;
 	}
 
