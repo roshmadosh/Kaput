@@ -50,7 +50,6 @@ The Swagger UI can be accessed while the app is running from `http://localhost:8
 from `http://localhost:8080/v3/api-docs`. Hoping to include [Slate](https://github.com/slatedocs/slate) eventually.  
 
 ### Content Negotiation
-- XML Response Format  
 Added just two dependencies to allow XML-formatted responses. Get XML responses by providing the request header `Accept: application/xml` from  
 `curl`/Postman/Talend.   
 
@@ -64,3 +63,10 @@ model (i.e. HAL-compliant response body) for DELETE methods because JPA's `CrudR
 Took a minute to understand distinction between recording DB credentials via `spring.liquibase.*` in `application.properties` and as arguments for the liquibase Gradle plugin. The former can be used for bootstrapping your DB on application start, the latter is for running Gradle tasks like `generateChangeLog`. One pain point I could _not_ resolve is how the plugin resolves the path you give for the `changelogFile` parameter, as the same path seems to work some tasks but not for others.  
 
 Worth noting that the insert `ChangeSet` didn't work until I removed the `tableName` parameter. Not sure why.  
+
+### Hibernate & JPA
+Biggest pain-point was debugging an `IllegalStateException` error from a one-to-many POST request. Enabling DEBUG logging didn't really help 
+and I had to try different things before finding that if I set `CascadeType` to `PERSIST` Hibernate tries to insert a `JobApplication` with null fields. Instead, I have to set it to `MERGE`. Not sure why atm.  
+
+Also, setting the `fetch` parameter to `LAZY` causes an exception to be thrown when making a GET request for a user's job applications.  
+

@@ -114,5 +114,12 @@ public class UserController {
 		return resp;
 	
 	}
+
+	@PostMapping("/{userId}/applications")
+	public User saveApplicationForUser(@PathVariable long userId, @Valid @RequestBody JobApplication application) throws UserException {
+		User user = userService.addApplicationByUserId(userId, application);	
+		return user;
+	}
+	
 	
 }

@@ -2,8 +2,11 @@ package link.hiroshisprojects.kaput.jobApplication;
 
 import java.time.LocalDate;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,10 +14,14 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
 import org.springframework.hateoas.RepresentationModel;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import link.hiroshisprojects.kaput.user.User;
 
@@ -26,34 +33,38 @@ public class JobApplication extends RepresentationModel<JobApplication> {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne()
 	private User user;
 
 	@Column(name="job_title", nullable = false)
 	@Size(max = 30)
-	@NotEmpty(message = "Job title is required!")
+	@NotEmpty(message = "Field 'jobTitle' is required!")
 	private String jobTitle;
 
 	@Column(name = "company_name", nullable = false)
 	@Size(min = 1, max = 55)
-	@NotEmpty(message = "Company name required!")
+	@NotEmpty(message = "Field 'companyName' is required!")
 	private String companyName;
 
 	@Column(name="date_applied", nullable = false)
-	@Past(message = "Apply date must be in the past.")
-	@NotEmpty(message = "Apply date required!")
+	@Past(message = "Invalid date given for field 'dateApplied'.")
+  @JsonFormat(pattern = "MM/dd/yyyy")
+	@NotNull(message = "Field 'dateApplied' must be provided, format is MM/dd/yyyy.")
+	@Basic
 	private LocalDate dateApplied;
 
 	@Column(name="status", nullable = false)
-	@NotEmpty(message = "Status is required!")
+	@Enumerated(EnumType.ORDINAL)
 	private ApplicationStatus status;
 
-	public JobApplication(User user, String jobTitle, String companyName, LocalDate dateApplied) {
-		this.user = user;
+	public JobApplication() {}
+
+	@JsonCreator
+	public JobApplication(String jobTitle, String companyName, LocalDate dateApplied) {
 		this.jobTitle = jobTitle;
 		this.dateApplied = dateApplied;
 		this.companyName = companyName;
-		this.status = ApplicationStatus.NOT_RESPONDED;
+		this.status = ApplicationStatus.NOT_RESPONDED; 
 	}
 
 	public User getUser() {
@@ -105,10 +116,15 @@ public class JobApplication extends RepresentationModel<JobApplication> {
 	}
 
 	@Override
+	public String toString() {
+		return "JobApplication [user=" + user + ", jobTitle=" + jobTitle + ", companyName=" + companyName + ", dateApplied="
+				+ dateApplied + ", status=" + status + "]";
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		result = prime * result + ((jobTitle == null) ? 0 : jobTitle.hashCode());
 		result = prime * result + ((companyName == null) ? 0 : companyName.hashCode());
@@ -125,8 +141,6 @@ public class JobApplication extends RepresentationModel<JobApplication> {
 		if (getClass() != obj.getClass())
 			return false;
 		JobApplication other = (JobApplication) obj;
-		if (id != other.id)
-			return false;
 		if (user == null) {
 			if (other.user != null)
 				return false;
@@ -149,13 +163,6 @@ public class JobApplication extends RepresentationModel<JobApplication> {
 			return false;
 		return true;
 	}
-
-	@Override
-	public String toString() {
-		return "JobApplication [user=" + user + ", jobTitle=" + jobTitle + ", companyName=" + companyName + ", dateApplied="
-				+ dateApplied + ", status=" + status + "]";
-	}
-
 
 } 
 

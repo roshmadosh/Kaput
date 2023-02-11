@@ -18,4 +18,6 @@ public interface UserService {
 
 	public List<JobApplication> getApplicationsByUserId(long userId); 
 
+	public User addApplicationByUserId(long userId, JobApplication application) throws UserException;
+
 }

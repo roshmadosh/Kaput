@@ -46,12 +46,14 @@ public class User extends RepresentationModel<User>{
 	private String password;
 
 	@OneToMany(
+		orphanRemoval = true,
 		mappedBy = "user",
-		cascade = CascadeType.ALL,
-		orphanRemoval = true
-	)
+		cascade = { CascadeType.MERGE, CascadeType.REMOVE })
 	@JsonIgnore
 	private Set<JobApplication> jobApplications;
+
+	public User() {
+	}
 
 	public User(String email, String firstName, String lastName, String password) {
 		this.email = email;
@@ -59,6 +61,19 @@ public class User extends RepresentationModel<User>{
 		this.lastName = lastName;
 		this.password = password;
 		this.jobApplications = new HashSet<>();
+	}
+
+	public void	addJobApplication(JobApplication application) throws UserValidationException {
+		application.setUser(this);
+
+		if (this.getJobApplications().contains(application)) {
+			throw new UserValidationException("Duplicate application with job title '" + application.getJobTitle() +
+				"' for company '" + application.getCompanyName() + 
+				"' on applied date " + application.getDateApplied() +	
+				" found for user with ID " + this.getId());
+		}
+
+		this.jobApplications.add(application);
 	}
 
 	public long getId() {
@@ -101,15 +116,8 @@ public class User extends RepresentationModel<User>{
 		this.password = password;
 	}
 
-	public User() {
-	}
-
 	public Set<JobApplication> getJobApplications() {
 		return jobApplications;
-	}
-
-	public void setJobApplications(Set<JobApplication> jobApplications) {
-		this.jobApplications = jobApplications;
 	}
 
 	@Override
@@ -144,8 +152,4 @@ public class User extends RepresentationModel<User>{
 	public String toString() {
 		return "User [id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName + "]";
 	}
-
-
-
-
 }

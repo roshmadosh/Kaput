@@ -51,6 +51,12 @@ public class UserServiceImpl implements UserService {
 		return applicationsDao.findByUserId(userId); 
 	}
 
+	@Override
+	public User addApplicationByUserId(long userId, JobApplication application) throws UserException {
+		User user = userDao.findById(userId).orElseThrow(() -> new UserNotFoundException("Cannot find user with ID " + userId));
+		user.addJobApplication(application);
+		return userDao.save(user);
+	}
 
 	
 }

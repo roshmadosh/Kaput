@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import link.hiroshisprojects.kaput.jobApplication.JobApplicationException;
 import link.hiroshisprojects.kaput.user.UserException;
 
 @RestControllerAdvice
@@ -21,6 +22,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
 	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<CustomExceptionResponseBody> defaultHandler(Exception e, WebRequest request) {
+		e.printStackTrace();
 		CustomExceptionResponseBody resp = new CustomExceptionResponseBody(e.getMessage());
 
 		return ResponseEntity.internalServerError().body(resp);
@@ -28,6 +30,13 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
 	@ExceptionHandler(UserException.class)
 	public final ResponseEntity<CustomExceptionResponseBody> userHandler(UserException e, WebRequest request) {
+		CustomExceptionResponseBody resp = new CustomExceptionResponseBody(e.getMessage());
+
+		return new ResponseEntity<CustomExceptionResponseBody>(resp, e.getStatusCode()); 
+	}
+
+	@ExceptionHandler(JobApplicationException.class)
+	public final ResponseEntity<CustomExceptionResponseBody> jobApplicationHandler(JobApplicationException e, WebRequest request) {
 		CustomExceptionResponseBody resp = new CustomExceptionResponseBody(e.getMessage());
 
 		return new ResponseEntity<CustomExceptionResponseBody>(resp, e.getStatusCode()); 
