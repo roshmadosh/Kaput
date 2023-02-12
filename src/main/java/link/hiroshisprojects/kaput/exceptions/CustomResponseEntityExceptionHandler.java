@@ -76,6 +76,4 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 		return new ResponseEntity<Object>(resp, HttpStatus.BAD_REQUEST); 
 	}
 
-	
-
 }
