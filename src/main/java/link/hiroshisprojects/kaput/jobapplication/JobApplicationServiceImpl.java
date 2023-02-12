@@ -35,4 +35,12 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 		return applicationDao.findByUserId(userId);
 	}
 
+
+	@Override
+	public JobApplication updateJobApplicationById(long id, JobApplicationDTO dto) throws JobApplicationException {
+		JobApplication app = applicationDao.findById(id).orElseThrow(() -> new JobApplicationNotFoundException("Job application with ID " + id + "not found."));
+		app.update(dto);
+		return applicationDao.save(app);
+	}
+
 }

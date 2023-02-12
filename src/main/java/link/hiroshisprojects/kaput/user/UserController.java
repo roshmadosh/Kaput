@@ -22,6 +22,7 @@ import link.hiroshisprojects.kaput.jobapplication.JobApplicationService;
 import link.hiroshisprojects.kaput.jobapplication.JobApplicationNotFoundException;
 import link.hiroshisprojects.kaput.jobapplication.JobApplicationException;
 import link.hiroshisprojects.kaput.jobapplication.JobApplication;
+import link.hiroshisprojects.kaput.jobapplication.JobApplicationDTO;
 import link.hiroshisprojects.kaput.jobapplication.JobApplications;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
@@ -160,6 +161,20 @@ public class UserController {
 		return savedApp;
 		
 	}
+
+	@PatchMapping("/{userId}/applications/{appId}")
+	public ResponseEntity<JobApplication> updateJobApplicationById(@PathVariable long userId, @PathVariable long appId,
+			@Valid @RequestBody JobApplicationDTO dto) throws JobApplicationException {
+
+			JobApplication updated = appService.updateJobApplicationById(appId, dto);
+
+			Link selfLink = linkTo(methodOn(this.getClass()).getApplicationByUserId(userId, appId)).withSelfRel();
+		
+			updated.add(selfLink);
+
+			return ResponseEntity.ok().body(updated);
+	}
+
 
 	@DeleteMapping("/{userId}/applications/{appId}")
 	public void deleteApplicationForUser(@PathVariable long userId, @PathVariable long appId) {

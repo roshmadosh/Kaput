@@ -45,10 +45,17 @@ implementation doesn't return a `ResponseEntity`, and so we don't get a response
 Another benefit of validating at the controller level is that the `Exception` object from `handleMethodArgumentNotValid` offers several 
 convenience methods, which allow us to do things like return the default message for _each_ validation error to the API consumer.  
 
-I realized a bit too late that a DTO makes more sense than a Map for PUT/PATCH operations. This is because using a Map will 
-1. require you to hardcode expected request body fields, while a DTO with `@Valid` could have inferred them  
-2. require you to write your own validation logic
-3. require multiple places to refactor if the updateable fields change (e.g. where you perform the validation, **tests**,...)
+For PUT/PATCH methods, I tried using Map for User, then a DTO for JobApplication. The drawbacks of using a Map are
+1. having to hardcode expected request body fields, while a DTO with `@Valid` could have inferred them  
+2. writing your own validation logic
+3. multiple places to refactor if the updateable fields change (e.g. where you perform the validation, **tests**,...)
+
+While the drawbacks of using a DTO are 
+1. you have to handle requests with invalid field-names (which you also have to do for Maps)
+2. you have to create a custom method for updating an object using a DTO 
+
+Also worth noting that deserialization errors are not caught by exception handler aspect, i.e. a request body with `dateApplied: 'april'` 
+will throw an `HttpMessageNotReadableException` which bypasses the exception-handlers (possibly) because it's a runtime exception. 
 
 ### Swagger Docs 
 The Swagger UI can be accessed while the app is running from `http://localhost:8080/swagger-ui/index.html`. The Open API spec can be accessed 

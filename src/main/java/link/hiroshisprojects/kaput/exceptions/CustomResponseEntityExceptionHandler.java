@@ -7,6 +7,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -45,13 +47,13 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 	
 
 	@ExceptionHandler(EmptyResultDataAccessException.class)
-	public final ResponseEntity<CustomExceptionResponseBody> EmptyResultHandler(EmptyResultDataAccessException e, WebRequest request) {
+	public final ResponseEntity<CustomExceptionResponseBody> emptyResultHandler(EmptyResultDataAccessException e, WebRequest request) {
 		CustomExceptionResponseBody resp = new CustomExceptionResponseBody(e.getMessage());
 
 		return new ResponseEntity<CustomExceptionResponseBody>(resp, HttpStatus.NOT_FOUND);
 	}
 
-	/* For handling request validation exceptions. This is only required when using @Valid on controllers */
+	/* Returns a list of validation error messages. */
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(
 			MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -63,5 +65,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 		
 		return new ResponseEntity<Object>(resp, HttpStatus.BAD_REQUEST); 
 	}
+
+	
 
 }

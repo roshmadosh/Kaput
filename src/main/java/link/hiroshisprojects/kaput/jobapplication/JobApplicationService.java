@@ -13,4 +13,6 @@ public interface JobApplicationService {
 
 	public void deleteJobApplicationById(long id);
 
+	public JobApplication updateJobApplicationById(long id, JobApplicationDTO dto) throws JobApplicationException;
+
 }

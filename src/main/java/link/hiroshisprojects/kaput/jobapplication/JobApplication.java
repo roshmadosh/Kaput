@@ -14,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
@@ -37,12 +36,12 @@ public class JobApplication extends RepresentationModel<JobApplication> {
 	private User user;
 
 	@Column(name="job_title", nullable = false)
-	@Size(max = 30)
+	@Size(max = 30, message = "Job title has a 30-character maximum.")
 	@NotEmpty(message = "Field 'jobTitle' is required!")
 	private String jobTitle;
 
 	@Column(name = "company_name", nullable = false)
-	@Size(min = 1, max = 55)
+	@Size(max = 30, message = "Company name has a 30-character maximum.")
 	@NotEmpty(message = "Field 'companyName' is required!")
 	private String companyName;
 
@@ -65,6 +64,21 @@ public class JobApplication extends RepresentationModel<JobApplication> {
 		this.dateApplied = dateApplied;
 		this.companyName = companyName;
 		this.status = ApplicationStatus.NOT_RESPONDED; 
+	}
+
+	public void update(JobApplicationDTO dto) {
+		if (dto.getJobTitle() != null)	{
+			this.jobTitle = dto.getJobTitle();
+		}
+		if (dto.getCompanyName() != null)	{
+			this.companyName = dto.getCompanyName();
+		}
+		if (dto.getDateApplied() != null)	{
+			this.dateApplied = dto.getDateApplied();
+		}
+		if (dto.getStatus() != null) {
+			this.status = dto.getStatus();
+		}
 	}
 
 	public User getUser() {
