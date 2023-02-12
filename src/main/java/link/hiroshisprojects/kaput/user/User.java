@@ -2,6 +2,8 @@ package link.hiroshisprojects.kaput.user;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -74,6 +76,27 @@ public class User extends RepresentationModel<User>{
 		}
 
 		this.jobApplications.add(application);
+	}
+
+	public void updateUser(Map<String, String> fields) throws UserValidationException {
+		for (Entry<String, String> entry : fields.entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue();
+
+			switch (key) {
+				case "firstName":
+					this.setFirstName(value);
+					break;
+				case "lastName":
+					this.setLastName(value);
+					break;
+				case "email":
+					this.setEmail(value);
+					break;
+				default:
+					throw new UserValidationException("Valid keys to update are ['firstName', 'lastName', 'email']");	
+			}
+		}
 	}
 
 	public long getId() {

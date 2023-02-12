@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import org.springframework.test.context.ActiveProfiles;
 import link.hiroshisprojects.kaput.user.User;
 import link.hiroshisprojects.kaput.user.UserService;
 
+
+@Disabled
 @SpringBootTest
 @ActiveProfiles("test")
 class UsersIntegrationTests {

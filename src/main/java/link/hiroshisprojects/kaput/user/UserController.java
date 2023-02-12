@@ -2,6 +2,7 @@ package link.hiroshisprojects.kaput.user;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -9,6 +10,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -87,6 +89,19 @@ public class UserController {
 		} catch (Exception e) {
 			throw new UserValidationException("User field validation failed. " + e.getMessage());
 		}
+	}
+
+	@PatchMapping("/{userId}")
+	public ResponseEntity<User> updateUserById(@PathVariable long userId, 
+			@RequestBody Map<String, String> updatedFields) throws UserException {
+
+		User updated = userService.updateUserById(userId, updatedFields);
+
+		Link selfLink = linkTo(this.getClass()).slash(userId).withSelfRel();
+
+		updated.add(selfLink);
+
+		return ResponseEntity.ok().body(updated);
 	}
 
 	/* Not sure how to incorporate HATEOAS here b/c JPA's delete method doesn't return the object. */

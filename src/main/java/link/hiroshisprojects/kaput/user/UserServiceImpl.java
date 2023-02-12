@@ -1,7 +1,11 @@
 package link.hiroshisprojects.kaput.user;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Map.Entry;
+import java.util.Arrays;
 
 import javax.validation.ConstraintViolationException;
 
@@ -53,6 +57,19 @@ public class UserServiceImpl implements UserService {
 
 		// saved application should be the last one added to the list 
 		return applications.get(applications.size() - 1);
+	}
+
+	@Override
+	public User updateUserById(long userId, Map<String, String> updatedFields) throws UserException {
+		
+		User user = userDao.findById(userId).orElseThrow(() -> new UserNotFoundException("Cannot find user with ID " + userId));
+
+		user.updateUser(updatedFields);	
+
+		User updated = userDao.save(user);
+
+		return updated;
+
 	}
 	
 }

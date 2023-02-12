@@ -45,6 +45,11 @@ implementation doesn't return a `ResponseEntity`, and so we don't get a response
 Another benefit of validating at the controller level is that the `Exception` object from `handleMethodArgumentNotValid` offers several 
 convenience methods, which allow us to do things like return the default message for _each_ validation error to the API consumer.  
 
+I realized a bit too late that a DTO makes more sense than a Map for PUT/PATCH operations. This is because using a Map will 
+1. require you to hardcode expected request body fields, while a DTO with `@Valid` could have inferred them  
+2. require you to write your own validation logic
+3. require multiple places to refactor if the updateable fields change (e.g. where you perform the validation, **tests**,...)
+
 ### Swagger Docs 
 The Swagger UI can be accessed while the app is running from `http://localhost:8080/swagger-ui/index.html`. The Open API spec can be accessed 
 from `http://localhost:8080/v3/api-docs`. Hoping to include [Slate](https://github.com/slatedocs/slate) eventually.  
@@ -69,4 +74,5 @@ Biggest pain-point was debugging an `IllegalStateException` error from a one-to-
 and I had to try different things before finding that if I set `CascadeType` to `PERSIST` Hibernate tries to insert a `JobApplication` with null fields. Instead, I have to set it to `MERGE`. Not sure why atm.  
 
 Also, setting the `fetch` parameter to `LAZY` causes an exception to be thrown when making a GET request for a user's job applications.  
+
 

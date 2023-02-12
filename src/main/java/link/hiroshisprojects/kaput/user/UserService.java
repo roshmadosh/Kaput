@@ -1,5 +1,6 @@
 package link.hiroshisprojects.kaput.user;
 
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.ConstraintViolationException;
@@ -15,5 +16,7 @@ public interface UserService {
 	public void deleteUserById(long id);
 
 	public JobApplication addApplicationByUserId(long userId, JobApplication application) throws UserException;
+
+	public User updateUserById(long userId, Map<String, String> updatedFields) throws UserException;
 
 }
