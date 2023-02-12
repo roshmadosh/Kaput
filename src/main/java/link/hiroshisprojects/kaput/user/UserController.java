@@ -145,6 +145,11 @@ public class UserController {
 		return savedApp;
 		
 	}
+
+	@DeleteMapping("/{userId}/applications/{appId}")
+	public void deleteApplicationForUser(@PathVariable long userId, @PathVariable long appId) {
+		appService.deleteJobApplicationById(appId);
+	}
 	
 	
 }

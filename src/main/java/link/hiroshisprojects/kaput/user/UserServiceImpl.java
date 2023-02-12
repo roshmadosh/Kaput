@@ -46,10 +46,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public JobApplication addApplicationByUserId(long userId, JobApplication application) throws UserException {
-		// throw an exception early if user ID not found
 		User user = userDao.findById(userId).orElseThrow(() -> new UserNotFoundException("Cannot find user with ID " + userId));
-
 		user.addJobApplication(application);
+
 		List<JobApplication> applications = userDao.save(user).getJobApplications();
 
 		// saved application should be the last one added to the list 

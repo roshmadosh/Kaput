@@ -27,8 +27,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
 	@Override
 	public void deleteJobApplicationById(long id) {
-		// TODO Auto-generated method stub
-		
+		applicationDao.deleteById(id);		
 	}
 
 	@Override
