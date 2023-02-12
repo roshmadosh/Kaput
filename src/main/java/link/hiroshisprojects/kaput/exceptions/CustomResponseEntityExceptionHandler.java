@@ -53,6 +53,16 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 		return new ResponseEntity<CustomExceptionResponseBody>(resp, HttpStatus.NOT_FOUND);
 	}
 
+	/* For handling deserialization exceptions. */
+	@Override
+	protected ResponseEntity<Object> handleHttpMessageNotReadable(
+			HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+		CustomExceptionResponseBody resp = new CustomExceptionResponseBody(ex.getCause().getMessage());
+
+		return new ResponseEntity<Object>(resp, status);
+	}
+
 	/* Returns a list of validation error messages. */
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(

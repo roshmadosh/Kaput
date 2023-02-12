@@ -54,8 +54,9 @@ While the drawbacks of using a DTO are
 1. you have to handle requests with invalid field-names (which you also have to do for Maps)
 2. you have to create a custom method for updating an object using a DTO 
 
-Also worth noting that deserialization errors are not caught by exception handler aspect, i.e. a request body with `dateApplied: 'april'` 
-will throw an `HttpMessageNotReadableException` which bypasses the exception-handlers (possibly) because it's a runtime exception. 
+Also worth noting that handling deserialization errors requires us to override `handleHttpMessageNotReadable` method in our exception handler 
+class. In general, it's a good idea to check that if an exception isn't getting caught by our handlers, check to see if there's a method 
+we have to override that handles it already.
 
 ### Swagger Docs 
 The Swagger UI can be accessed while the app is running from `http://localhost:8080/swagger-ui/index.html`. The Open API spec can be accessed 
