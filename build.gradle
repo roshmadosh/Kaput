@@ -30,9 +30,6 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'org.postgresql:postgresql'
 
-	// pw encrypt/decrypt
-	implementation 'org.mindrot:jbcrypt:0.4'
-
 	// hateoas
 	implementation 'org.springframework.hateoas:spring-hateoas:1.5.2'
 

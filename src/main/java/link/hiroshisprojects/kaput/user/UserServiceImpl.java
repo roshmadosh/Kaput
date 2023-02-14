@@ -1,32 +1,30 @@
 package link.hiroshisprojects.kaput.user;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Map.Entry;
-import java.util.Arrays;
 
 import javax.validation.ConstraintViolationException;
 
-import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import link.hiroshisprojects.kaput.jobapplication.JobApplication;
-import link.hiroshisprojects.kaput.jobapplication.JobApplicationDao;
 
 @Service
 public class UserServiceImpl implements UserService {
 
 	private UserDao userDao;
+	private PasswordEncoder passwordEncoder;
 
-	public UserServiceImpl(UserDao userDao) {
+	public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
 		this.userDao = userDao;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
 	public User save(User user) throws ConstraintViolationException {
-		String encrypted = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10));
+		String encrypted = passwordEncoder.encode(user.getPassword());
 		user.setPassword(encrypted);
 
 		return userDao.save(user);
