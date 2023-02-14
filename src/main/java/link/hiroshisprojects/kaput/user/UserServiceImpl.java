@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.validation.ConstraintViolationException;
 
+import org.springframework.data.jpa.repository.support.QueryHints.NoHints;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -68,6 +69,11 @@ public class UserServiceImpl implements UserService {
 
 		return updated;
 
+	}
+
+	@Override
+	public User findByEmail(String email) {
+		return userDao.findByEmail(email);	
 	}
 	
 }

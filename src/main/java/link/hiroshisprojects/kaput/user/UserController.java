@@ -75,23 +75,6 @@ public class UserController {
 		return ResponseEntity.ok().body(user);
 	}
 
-		
-	@PostMapping
-	public ResponseEntity<User> saveUser(@Valid @RequestBody User user) throws UserValidationException {
-		try {
-			User savedUser = userService.save(user);
-			URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}")
-				.buildAndExpand(savedUser.getId())
-				.toUri();
-
-			return ResponseEntity.created(location).build();
-
-		} catch (Exception e) {
-			throw new UserValidationException("User field validation failed. " + e.getMessage());
-		}
-	}
-
 	@PatchMapping("/{userId}")
 	public ResponseEntity<User> updateUserById(@PathVariable long userId, 
 			@RequestBody Map<String, String> updatedFields) throws UserException {

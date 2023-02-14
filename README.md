@@ -87,6 +87,18 @@ Also, setting the `fetch` parameter to `LAZY` causes an exception to be thrown w
 Using Spring Security. Created a class that implements `UserDetailsService` so that my custom `User` class can be used for authentication. For 
 future reference, **don't name your authenticator entity 'User', as it clashes with a User class defined in Spring Security**. Spring Security was somehow "smart enough" to know I want to connect to the PostgreSQL instance described in my `application.properties` file. Had I not specified `spring.datasource` properties, Spring Data would have created an in-memory storage for valid username/passwords by default.  
 
-Since my passwords are encrypted with Bcrypt, I had to define a `PasswordEncoder` bean that returned a `BCryptPasswordEncoder` instance.  
+Password hashing and matching is done through `PasswordEncoder` interface provided by Spring Security.
+
+Edit: `UserDetailsService` replaced with `AuthenticationProvider`. The former goes through the default `DaoAuthenticationProvider`, but by customizing your own provider you have more control. For example, you can throw your own exceptions that have custom messages when the username or password doesn't pass.  
+
+### More Authentication...
+The request that my Angular frontend sends to my authentication endpoint `/api/login` must be in a particular format. Most importantly, 
+1. On the API side, `/api/login` accepts an `Authentication` parameter which prompts the request to go through the authentication filters, providers, etc.
+2. The request from the client must have an `Authorization` header with the value `Basic <creds>`, where `creds` is the username and password separated by a colon, and encoded to base64.  
+
+The response will contain the cookies `JSESSIONID` and `XSRF-TOKEN`. The latter cookie value needs to be sent with every request to protected endpoints under the header `X-XSRF-TOKEN` to bypass CSRF security (see the CSRF section).
+
+### CSRF 
+I added public endpoints as arguments to `csrf().ignoringAntMatchers()` so that POST/PUT requests to them won't be blocked. To access protected endpoints, logging in successfully causes the server to send back an `XSRF-TOKEN` cookie, which the client must include in all requests to protected endpoints under the header `X-XSRF-TOKEN`. This is enabled by calling `.csrfTokenRepository()`.
 
 

@@ -19,4 +19,6 @@ public interface UserService {
 
 	public User updateUserById(long userId, Map<String, String> updatedFields) throws UserException;
 
+	public User findByEmail(String email);
+
 }
