@@ -25,7 +25,7 @@ import link.hiroshisprojects.kaput.jobapplication.JobApplication;
 
 @Entity
 @Table(name="users")
-public class User extends RepresentationModel<User>{
+public class User extends RepresentationModel<User> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

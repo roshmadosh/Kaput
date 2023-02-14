@@ -83,4 +83,10 @@ and I had to try different things before finding that if I set `CascadeType` to 
 
 Also, setting the `fetch` parameter to `LAZY` causes an exception to be thrown when making a GET request for a user's job applications.  
 
+### Authentication  
+Using Spring Security. Created a class that implements `UserDetailsService` so that my custom `User` class can be used for authentication. For 
+future reference, **don't name your authenticator entity 'User', as it clashes with a User class defined in Spring Security**. Spring Security was somehow "smart enough" to know I want to connect to the PostgreSQL instance described in my `application.properties` file. Had I not specified `spring.datasource` properties, Spring Data would have created an in-memory storage for valid username/passwords by default.  
+
+Since my passwords are encrypted with Bcrypt, I had to define a `PasswordEncoder` bean that returned a `BCryptPasswordEncoder` instance.  
+
 
