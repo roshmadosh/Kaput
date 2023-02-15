@@ -1,6 +1,8 @@
 package link.hiroshisprojects.kaput.user;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -21,11 +23,12 @@ public class AuthController {
 	}
 
 	@PostMapping("/api/login")
-	public User login(Authentication authentication) {
-		User user = userService.findByEmail(authentication.getName());		
-		if (user == null) {
-			return null;
-		}	return user;
+	public ResponseEntity<User> login(Authentication authentication) {
+		User user = userService.findUserById(Long.parseLong(authentication.getName())).get();		
+		if (user != null) {		
+			return ResponseEntity.ok().body(user);
+		}	
+		return ResponseEntity.badRequest().body(user);
 	}
 
 	@PostMapping("/api/register")

@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.data.jpa.repository.support.QueryHints.NoHints;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,17 +38,20 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@PreAuthorize("T(Long).parseLong(authentication.principal) == #id")
 	public Optional<User> findUserById(long id) {
 		return userDao.findById(id);
 	}
 
 	@Override
+	@PreAuthorize("T(Long).parseLong(authentication.principal) == #id")
 	public void deleteUserById(long id) {
 		userDao.deleteById(id);
 	}
 	
 
 	@Override
+	@PreAuthorize("T(Long).parseLong(authentication.principal) == #userId")
 	public JobApplication addApplicationByUserId(long userId, JobApplication application) throws UserException {
 		User user = userDao.findById(userId).orElseThrow(() -> new UserNotFoundException("Cannot find user with ID " + userId));
 		user.addJobApplication(application);
@@ -59,6 +63,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@PreAuthorize("T(Long).parseLong(authentication.principal) == #userId")
 	public User updateUserById(long userId, Map<String, String> updatedFields) throws UserException {
 		
 		User user = userDao.findById(userId).orElseThrow(() -> new UserNotFoundException("Cannot find user with ID " + userId));
@@ -68,7 +73,6 @@ public class UserServiceImpl implements UserService {
 		User updated = userDao.save(user);
 
 		return updated;
-
 	}
 
 	@Override

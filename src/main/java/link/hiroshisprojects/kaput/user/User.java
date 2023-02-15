@@ -20,6 +20,7 @@ import javax.validation.constraints.Size;
 import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import link.hiroshisprojects.kaput.jobapplication.JobApplication;
 
@@ -44,14 +45,15 @@ public class User extends RepresentationModel<User> {
 	@NotEmpty(message = "Last name cannot be empty!")
 	private String lastName;
 
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@NotEmpty(message = "You must provide a password!")
 	private String password;
 
+	@JsonIgnore
 	@OneToMany(
 		orphanRemoval = true,
 		mappedBy = "user",
 		cascade = { CascadeType.MERGE, CascadeType.REMOVE })
-	@JsonIgnore
 	private List<JobApplication> jobApplications;
 
 	public User() {

@@ -8,6 +8,8 @@ import javax.validation.Valid;
 
 import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -65,6 +67,7 @@ public class UserController {
 
 	@GetMapping(value = "/{id}", produces = "application/hal+json")
 	public ResponseEntity<User> getUserById(@PathVariable long id) throws UserNotFoundException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		User user = userService.findUserById(id).orElseThrow(() -> new UserNotFoundException(String.format("User with ID %s not found.", id)));
 		Link link = linkTo(this.getClass()).slash(id).withSelfRel();
 		user.add(link);
@@ -73,6 +76,23 @@ public class UserController {
 		user.add(appsLink);
 
 		return ResponseEntity.ok().body(user);
+	}
+
+		
+	@PostMapping
+	public ResponseEntity<User> saveUser(@Valid @RequestBody User user) throws UserValidationException {
+		try {
+			User savedUser = userService.save(user);
+			URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(savedUser.getId())
+				.toUri();
+
+			return ResponseEntity.created(location).build();
+
+		} catch (Exception e) {
+			throw new UserValidationException("User field validation failed. " + e.getMessage());
+		}
 	}
 
 	@PatchMapping("/{userId}")
@@ -120,7 +140,7 @@ public class UserController {
 	}
 
 	@GetMapping("/{userId}/applications/{appId}")
-	public JobApplication getApplicationByUserId(@PathVariable long userId, @PathVariable long appId) throws JobApplicationNotFoundException {
+	public JobApplication getApplicationByUserId(@PathVariable long userId, @PathVariable long appId) throws JobApplicationException {
 		String errorMessage = "Job Application with ID " + appId + " not found.";
 		JobApplication application = appService.findJobApplicationById(appId).orElseThrow(() -> new JobApplicationNotFoundException(errorMessage));
 		
@@ -163,6 +183,5 @@ public class UserController {
 	public void deleteApplicationForUser(@PathVariable long userId, @PathVariable long appId) {
 		appService.deleteJobApplicationById(appId);
 	}
-	
 	
 }

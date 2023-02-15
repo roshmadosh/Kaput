@@ -94,11 +94,15 @@ Edit: `UserDetailsService` replaced with `AuthenticationProvider`. The former go
 ### More Authentication...
 The request that my Angular frontend sends to my authentication endpoint `/api/login` must be in a particular format. Most importantly, 
 1. On the API side, `/api/login` accepts an `Authentication` parameter which prompts the request to go through the authentication filters, providers, etc.
-2. The request from the client must have an `Authorization` header with the value `Basic <creds>`, where `creds` is the username and password separated by a colon, and encoded to base64.  
+2. The request from the client must have an `Authorization` header with the value `Basic <creds>`, where `creds` is the username and password separated by a colon, and encoded to base64. The `Basic` part comes from use setting our security config to `httpBasic()`.  
 
 The response will contain the cookies `JSESSIONID` and `XSRF-TOKEN`. The latter cookie value needs to be sent with every request to protected endpoints under the header `X-XSRF-TOKEN` to bypass CSRF security (see the CSRF section).
 
 ### CSRF 
 I added public endpoints as arguments to `csrf().ignoringAntMatchers()` so that POST/PUT requests to them won't be blocked. To access protected endpoints, logging in successfully causes the server to send back an `XSRF-TOKEN` cookie, which the client must include in all requests to protected endpoints under the header `X-XSRF-TOKEN`. This is enabled by calling `.csrfTokenRepository()`.
 
+### Authorization  
+I'm requiring role of ADMIN to view all users. All other endpoints only require authentication. This is all configured in the security configuration file. To prevent users from accessing user or job application info of other users, I had to do method-level authorization on the service classes using the `@PreAuthorize` annotation.   
+
+In addition, since I'm requiring the userID to access user-specific data (versus email, which is how user's are authenticated), I had to update my `UsernamePasswordAuthenticationProvider` to assign the id to the "username" attribute of the `Authentication.Principal` object (which is how you obtain the username and password of the authenticated user making the request).  
 

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,9 +16,9 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import io.swagger.v3.oas.models.PathItem.HttpMethod;
 
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class AppSecurityConfig {
 
 	private static final String[] PUBLIC_ENDPOINTS = {"/api/login", "/api/register"};
@@ -39,6 +40,7 @@ public class AppSecurityConfig {
 			}
 		}).and().authorizeRequests()
 				.antMatchers(PUBLIC_ENDPOINTS).permitAll()
+				.antMatchers("/api/users", "/api/users/").hasRole("ADMIN")
 				.antMatchers("/api/users/**").authenticated()
 			.and().csrf()
 				.ignoringAntMatchers(PUBLIC_ENDPOINTS)
