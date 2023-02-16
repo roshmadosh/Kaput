@@ -33,6 +33,10 @@ One pain-point with this strategy is the inheritance tree is a bit long, where `
 `UserException` -> `UserNotFoundException`. I didn't know how to pass down every overloaded constructor from `Exception` 
 down to the implemenation classes without having to define them in the intermediate classes, which feels very repetitve.  
 
+To implement custom exception handling for Spring Security's `Authentication.authorize` method, you have to create a class that implements `AuthenticationEntryPoint` and set the `authenticationEntryPoint` in your `SecurityFilterChain` bean. This is because the exception is thrown while the request is going through the security filters, i.e. before the request "reaches" the controllers, and so adding an exception handler to our `@ControllerAdvice` class won't be sufficient.  
+
+If using `httpBasic` security configuration, you have to set the `authenticationEntryPoint` from `httpBasic`, otherwise you set it from `exceptionHandling`.
+
 ### Validation
 Both the data access and controller layers rely on the `javax.validation` annotations, but only the data access layer uses  
 the validation constraints imposed by the `javax.persistence` annotations.
@@ -102,7 +106,7 @@ The response will contain the cookies `JSESSIONID` and `XSRF-TOKEN`. The latter 
 I added public endpoints as arguments to `csrf().ignoringAntMatchers()` so that POST/PUT requests to them won't be blocked. To access protected endpoints, logging in successfully causes the server to send back an `XSRF-TOKEN` cookie, which the client must include in all requests to protected endpoints under the header `X-XSRF-TOKEN`. This is enabled by calling `.csrfTokenRepository()`.
 
 ### Authorization  
-I'm requiring role of ADMIN to view all users. All other endpoints only require authentication. This is all configured in the security configuration file. To prevent users from accessing user or job application info of other users, I had to do method-level authorization on the service classes using the `@PreAuthorize` annotation.   
+I'm requiring role of ADMIN to view all users. All other endpoints only require authentication. This is all configured in the security configuration file. To prevent users from accessing user or job application info of other users, I had to do method-level authorization on the service classes using the `@PreAuthorize` annotation. This annotation only works if you include the `@EnableGlobalMethodSecurity(prePostEnabled = true)` annotation on your security config file.    
 
 In addition, since I'm requiring the userID to access user-specific data (versus email, which is how user's are authenticated), I had to update my `UsernamePasswordAuthenticationProvider` to assign the id to the "username" attribute of the `Authentication.Principal` object (which is how you obtain the username and password of the authenticated user making the request).  
 

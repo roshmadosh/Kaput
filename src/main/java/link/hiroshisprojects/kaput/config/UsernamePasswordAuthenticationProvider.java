@@ -26,7 +26,6 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 		this.userDao = userDao;
 		this.passwordEncoder = passwordEncoder;
 	}
-	
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {

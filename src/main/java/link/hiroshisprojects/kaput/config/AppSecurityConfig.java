@@ -4,6 +4,8 @@ import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -11,6 +13,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
@@ -22,6 +25,10 @@ import org.springframework.web.cors.CorsConfigurationSource;
 public class AppSecurityConfig {
 
 	private static final String[] PUBLIC_ENDPOINTS = {"/api/login", "/api/register"};
+
+	@Autowired
+	@Qualifier("restAuthenticationEntryPoint")
+	private AuthenticationEntryPoint authenticationEntryPoint;
 
 	@Bean
 	@Profile("dev")
@@ -40,12 +47,14 @@ public class AppSecurityConfig {
 			}
 		}).and().authorizeRequests()
 				.antMatchers(PUBLIC_ENDPOINTS).permitAll()
-				.antMatchers("/api/users", "/api/users/").hasRole("ADMIN")
+				.antMatchers("/api/users", "/api/users/").permitAll()
 				.antMatchers("/api/users/**").authenticated()
+			.and().httpBasic()
+				.authenticationEntryPoint(authenticationEntryPoint)
 			.and().csrf()
 				.ignoringAntMatchers(PUBLIC_ENDPOINTS)
-				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-			.and().httpBasic();
+				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+
 
 		return http.build();
 	}

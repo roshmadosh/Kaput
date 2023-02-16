@@ -7,10 +7,9 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.validation.FieldError;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -45,8 +44,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 		return new ResponseEntity<CustomExceptionResponseBody>(resp, e.getStatusCode()); 
 	}
 
-	
-
 	@ExceptionHandler(EmptyResultDataAccessException.class)
 	public final ResponseEntity<CustomExceptionResponseBody> emptyResultHandler(EmptyResultDataAccessException e, WebRequest request) {
 		CustomExceptionResponseBody resp = new CustomExceptionResponseBody(e.getMessage());
@@ -59,6 +56,13 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 		CustomExceptionResponseBody resp = new CustomExceptionResponseBody(e.getMessage());
 
 		return new ResponseEntity<CustomExceptionResponseBody>(resp, HttpStatus.UNAUTHORIZED);
+	}
+
+	@ExceptionHandler(AuthenticationException.class)
+	public final ResponseEntity<CustomExceptionResponseBody> badCredentialsHandler(AuthenticationException e, WebRequest request) {
+		CustomExceptionResponseBody resp = new CustomExceptionResponseBody(e.getMessage());
+
+		return new ResponseEntity<CustomExceptionResponseBody>(resp, HttpStatus.BAD_REQUEST);
 	}
 
 	/* For handling deserialization exceptions. */

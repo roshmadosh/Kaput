@@ -1,5 +1,8 @@
 package link.hiroshisprojects.kaput.user;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -20,14 +23,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import link.hiroshisprojects.kaput.jobapplication.JobApplicationService;
-import link.hiroshisprojects.kaput.jobapplication.JobApplicationNotFoundException;
-import link.hiroshisprojects.kaput.jobapplication.JobApplicationException;
 import link.hiroshisprojects.kaput.jobapplication.JobApplication;
 import link.hiroshisprojects.kaput.jobapplication.JobApplicationDTO;
+import link.hiroshisprojects.kaput.jobapplication.JobApplicationException;
+import link.hiroshisprojects.kaput.jobapplication.JobApplicationNotFoundException;
+import link.hiroshisprojects.kaput.jobapplication.JobApplicationService;
 import link.hiroshisprojects.kaput.jobapplication.JobApplications;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping(value = "/api/users", produces = "application/hal+json")
