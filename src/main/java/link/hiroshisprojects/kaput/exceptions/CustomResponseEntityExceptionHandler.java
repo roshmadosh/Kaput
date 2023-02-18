@@ -1,7 +1,10 @@
 package link.hiroshisprojects.kaput.exceptions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.validation.ConstraintViolationException;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import link.hiroshisprojects.kaput.authentication.CustomAuthenticationException;
 import link.hiroshisprojects.kaput.jobapplication.JobApplicationException;
 import link.hiroshisprojects.kaput.user.UserException;
 
@@ -32,6 +36,13 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
 	@ExceptionHandler(UserException.class)
 	public final ResponseEntity<CustomExceptionResponseBody> userHandler(UserException e, WebRequest request) {
+		CustomExceptionResponseBody resp = new CustomExceptionResponseBody(e.getLocalizedMessage());
+
+		return new ResponseEntity<CustomExceptionResponseBody>(resp, e.getStatusCode()); 
+	}
+
+	@ExceptionHandler(CustomAuthenticationException.class)
+	public final ResponseEntity<CustomExceptionResponseBody> authHandler(CustomAuthenticationException e, WebRequest request) {
 		CustomExceptionResponseBody resp = new CustomExceptionResponseBody(e.getMessage());
 
 		return new ResponseEntity<CustomExceptionResponseBody>(resp, e.getStatusCode()); 
