@@ -16,6 +16,9 @@ import org.springframework.stereotype.Component;
 import link.hiroshisprojects.kaput.user.User;
 import link.hiroshisprojects.kaput.user.UserDao;
 
+/**
+ * Where our authentication implementation is defined, more-or-less.
+ */
 @Component
 public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
 

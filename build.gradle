@@ -30,6 +30,9 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'org.postgresql:postgresql'
 
+	// jwt
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
 	// hateoas
 	implementation 'org.springframework.hateoas:spring-hateoas:1.5.2'
 

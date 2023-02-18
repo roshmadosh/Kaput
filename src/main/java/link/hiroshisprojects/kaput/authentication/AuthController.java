@@ -22,6 +22,7 @@ import link.hiroshisprojects.kaput.user.UserValidationException;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 @RestController
 public class AuthController {
 
@@ -35,6 +36,7 @@ public class AuthController {
 	 * by our ControllerAdvice. */
 	@PostMapping("/api/login")
 	public ResponseEntity<User> login(Authentication authentication) throws CustomAuthenticationException {
+		System.out.println("AUTH");
 		if (authentication == null) 
 			throw new AuthenticationHeaderNotFoundException();
 

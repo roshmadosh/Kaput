@@ -110,3 +110,11 @@ I'm requiring role of ADMIN to view all users. All other endpoints only require 
 
 In addition, since I'm requiring the userID to access user-specific data (versus email, which is how user's are authenticated), I had to update my `UsernamePasswordAuthenticationProvider` to assign the id to the "username" attribute of the `Authentication.Principal` object (which is how you obtain the username and password of the authenticated user making the request).  
 
+### JWT Authentication  
+1. Disable default `JSESSIONID` cookie creation by modifying the `SecurityFilterChain` with `sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)`
+2. Create JWT token generator and validator filter classes. The generator class should be disabled on every endpoint that is _not_ the `/api/login` endpoint. The validator class is disabled _only_ at the `api/login` endpoint.
+3. In the `SecurityFilterChain`, add the generator filter _after_ the `BasicAuthenticationFilter`. The validator filter should be before.  
+
+The JWT secret is obtained from the `application.properties` file by creating a `SecurityConstants` bean. The bean has a `jwtSecret` attribute annotated with `@Value("${jwt.secret}")`.  
+
+
