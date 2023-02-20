@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
@@ -33,6 +34,9 @@ import link.hiroshisprojects.kaput.config.SecurityConstants;
 public class AppSecurityConfig {
 
 	private static final String[] PUBLIC_ENDPOINTS = {"/api/login", "/api/register"};
+
+	@Autowired
+	private FilterChainExceptionHandler filterChainExceptionHandler;
 
 	@Autowired
 	private SecurityConstants CONSTANTS;
@@ -68,8 +72,9 @@ public class AppSecurityConfig {
 				.ignoringAntMatchers(PUBLIC_ENDPOINTS)
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 			.and()
-				.addFilterAfter(new JwtTokenGeneratorFilter(CONSTANTS.getJwtSecret()), BasicAuthenticationFilter.class)
-				.addFilterBefore(new JwtTokenValidatorFilter(CONSTANTS.getJwtSecret()), BasicAuthenticationFilter.class);
+				.addFilterBefore(filterChainExceptionHandler, LogoutFilter.class)
+				.addFilterBefore(new JwtTokenValidatorFilter(CONSTANTS.getJwtSecret()), BasicAuthenticationFilter.class)
+				.addFilterAfter(new JwtTokenGeneratorFilter(CONSTANTS.getJwtSecret()), BasicAuthenticationFilter.class);
 
 		return http.build();
 	}

@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -44,7 +45,7 @@ public class JwtTokenGeneratorFilter extends OncePerRequestFilter {
 				.setExpiration(new Date(date.getTime() + 1000* 60 * EXPIRATION_IN_MINUTES))
 				.signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
 
-			response.setHeader("Authorization", jwt);
+			response.addCookie(new Cookie("Authorization", jwt));
 
 		}
 		filterChain.doFilter(request, response);

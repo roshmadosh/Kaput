@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,7 +33,14 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		
-		String jwt = request.getHeader("Authorization");
+		Cookie[] cookies = request.getCookies();
+		String jwt = "";
+		for (Cookie cookie: cookies) {
+			if (cookie.getName().equals("Authorization")) {
+				jwt = cookie.getValue();
+			}
+		}
+		System.out.println("JWT: " + jwt);
 
 		if (!jwt.isEmpty()) {
 			try {
@@ -42,14 +50,19 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
 					.getBody();
 
 				String email = String.valueOf(claims.get("email"));
-				String authorities = (String) claims.get("authorities");
+				// String authorities = (String) claims.get("authorities");
 
-				Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
+				// Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
+
+				System.out.println("EMAIL: " + email);
+				Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, null);
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 				
 			} catch (Exception e) {
 				throw new BadCredentialsException("Invalid token received!");
 			}
+		} else {
+			throw new BadCredentialsException("No jwt token present.");
 		}
 		filterChain.doFilter(request, response);
 	}

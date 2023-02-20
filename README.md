@@ -37,6 +37,7 @@ To implement custom exception handling for Spring Security's `Authentication.aut
 
 If using `httpBasic` security configuration, you have to set the `authenticationEntryPoint` from `httpBasic`, otherwise you set it from `exceptionHandling`.
 
+Also, if you want to handle exceptions thrown by filters, you have add an "exception handling" filter early in the filter chain. The filter autowires the `HandlerExceptionResolver`
 ### Validation
 Both the data access and controller layers rely on the `javax.validation` annotations, but only the data access layer uses  
 the validation constraints imposed by the `javax.persistence` annotations.

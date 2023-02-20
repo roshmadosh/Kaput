@@ -71,7 +71,8 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
 	@ExceptionHandler(AuthenticationException.class)
 	public final ResponseEntity<CustomExceptionResponseBody> badCredentialsHandler(AuthenticationException e, WebRequest request) {
-		CustomExceptionResponseBody resp = new CustomExceptionResponseBody(e.getMessage());
+		CustomExceptionResponseBody resp = new CustomExceptionResponseBody(e.getClass().getName()+ ": " + 
+				e.getMessage());
 
 		return new ResponseEntity<CustomExceptionResponseBody>(resp, HttpStatus.BAD_REQUEST);
 	}

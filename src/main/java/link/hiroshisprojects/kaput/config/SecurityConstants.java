@@ -11,7 +11,6 @@ public final class SecurityConstants {
 	private String jwtSecret;
 
 	public String getJwtSecret() {
-		System.out.println("SECRET " + jwtSecret);
 		return jwtSecret;
 	}
 }
