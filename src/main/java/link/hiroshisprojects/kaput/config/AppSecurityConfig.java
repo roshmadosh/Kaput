@@ -48,31 +48,29 @@ public class AppSecurityConfig {
 	@Bean
 	@Profile("dev")
 	SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-			.cors().configurationSource(new CorsConfigurationSource() {
-			@Override
-			public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-				CorsConfiguration config = new CorsConfiguration();
-				config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
-				config.setAllowedMethods(Collections.singletonList("*"));
-				config.setAllowCredentials(true);
-				config.setAllowedHeaders(Collections.singletonList("*"));
-				config.setMaxAge(3600L);
-				config.setExposedHeaders(Arrays.asList("Authorization"));
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and().cors().configurationSource(new CorsConfigurationSource() {
+				@Override
+				public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+					CorsConfiguration config = new CorsConfiguration();
+					config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+					config.setAllowedMethods(Collections.singletonList("*"));
+					config.setAllowCredentials(true);
+					config.setAllowedHeaders(Collections.singletonList("*"));
+					config.setMaxAge(3600L);
 
-				return config;
-			}
+					return config;
+				}
 		}).and().authorizeRequests()
 				.antMatchers(PUBLIC_ENDPOINTS).permitAll()
-				.antMatchers("/api/users", "/api/users/").permitAll()
-				.antMatchers("/api/users/**").authenticated()
+				.antMatchers("/api/users/**").authenticated() // checks if Authentication in SecurityContext is not null
 			.and().httpBasic()
-				.authenticationEntryPoint(authenticationEntryPoint)
+				.authenticationEntryPoint(authenticationEntryPoint) // for custom exception handling
 			.and().csrf()
 				.ignoringAntMatchers(PUBLIC_ENDPOINTS)
-				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // a new token is sent on every request
 			.and()
-				.addFilterBefore(filterChainExceptionHandler, LogoutFilter.class)
+				.addFilterBefore(filterChainExceptionHandler, LogoutFilter.class) // for handling exceptions thrown from filters
 				.addFilterBefore(new JwtTokenValidatorFilter(CONSTANTS.getJwtSecret()), BasicAuthenticationFilter.class)
 				.addFilterAfter(new JwtTokenGeneratorFilter(CONSTANTS.getJwtSecret()), BasicAuthenticationFilter.class);
 

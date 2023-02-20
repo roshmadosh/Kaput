@@ -36,7 +36,6 @@ public class AuthController {
 	 * by our ControllerAdvice. */
 	@PostMapping("/api/login")
 	public ResponseEntity<User> login(Authentication authentication) throws CustomAuthenticationException {
-		System.out.println("AUTH");
 		if (authentication == null) 
 			throw new AuthenticationHeaderNotFoundException();
 

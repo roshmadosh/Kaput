@@ -39,6 +39,8 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 		
 		Cookie[] cookies = request.getCookies();
+		if (cookies == null) { cookies = new Cookie[]{}; }
+
 		String jwt = "";
 		for (Cookie cookie: cookies) {
 			if (cookie.getName().equals("Authorization")) {
@@ -61,9 +63,8 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
 
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 			
-		} else {
-			throw new BadCredentialsException("No jwt token present.");
-		}
+		} 
+		
 		filterChain.doFilter(request, response);
 	}
 
