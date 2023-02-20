@@ -1,6 +1,10 @@
 package link.hiroshisprojects.kaput.config;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -13,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -40,27 +45,22 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
 				jwt = cookie.getValue();
 			}
 		}
-		System.out.println("JWT: " + jwt);
 
 		if (!jwt.isEmpty()) {
-			try {
 				Claims claims = Jwts.parser()
 					.setSigningKey(jwtSecret)
 					.parseClaimsJws(jwt)
 					.getBody();
 
-				String email = String.valueOf(claims.get("email"));
-				// String authorities = (String) claims.get("authorities");
+				String userId = String.valueOf(claims.get("userId"));
 
-				// Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
+				String authorities = claims.get("authorities").toString().replace("[", "").replace("]", "");
 
-				System.out.println("EMAIL: " + email);
-				Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, null);
+				Authentication authentication = new UsernamePasswordAuthenticationToken(userId, null, 
+						AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
+
 				SecurityContextHolder.getContext().setAuthentication(authentication);
-				
-			} catch (Exception e) {
-				throw new BadCredentialsException("Invalid token received!");
-			}
+			
 		} else {
 			throw new BadCredentialsException("No jwt token present.");
 		}

@@ -2,6 +2,7 @@ package link.hiroshisprojects.kaput.config;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
@@ -39,14 +40,17 @@ public class JwtTokenGeneratorFilter extends OncePerRequestFilter {
 			String jwt = Jwts.builder()
 				.setIssuer("kaput")
 				.setSubject("jwt token")
-				.claim("email", authentication.getName())
-				.claim("authorities", authentication.getAuthorities())
+				.claim("userId", authentication.getName())
+				.claim("authorities", authentication.getAuthorities().toString())
 				.setIssuedAt(date)
 				.setExpiration(new Date(date.getTime() + 1000* 60 * EXPIRATION_IN_MINUTES))
 				.signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
 
-			response.addCookie(new Cookie("Authorization", jwt));
+			Cookie cookie = new Cookie("Authorization", jwt);
+			cookie.setMaxAge(60 * 60);
+			cookie.setHttpOnly(true);
 
+			response.addCookie(cookie);
 		}
 		filterChain.doFilter(request, response);
 	}
