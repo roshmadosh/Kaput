@@ -41,6 +41,7 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
 		Cookie[] cookies = request.getCookies();
 		if (cookies == null) { cookies = new Cookie[]{}; }
 
+
 		String jwt = "";
 		for (Cookie cookie: cookies) {
 			if (cookie.getName().equals("Authorization")) {
@@ -49,6 +50,7 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
 		}
 
 		if (!jwt.isEmpty()) {
+
 				Claims claims = Jwts.parser()
 					.setSigningKey(jwtSecret)
 					.parseClaimsJws(jwt)
@@ -62,7 +64,7 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
 						AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
 
 				SecurityContextHolder.getContext().setAuthentication(authentication);
-			
+
 		} 
 		
 		filterChain.doFilter(request, response);

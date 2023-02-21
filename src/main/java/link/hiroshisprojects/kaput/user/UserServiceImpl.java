@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.data.jpa.repository.support.QueryHints.NoHints;
@@ -27,13 +28,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User save(User user) throws ConstraintViolationException {
 		String encrypted = passwordEncoder.encode(user.getPassword());
-		user.setPassword(encrypted);
+		User encryptedUser = new User(user.getEmail(), user.getFirstName(), user.getLastName(), encrypted);
 
-		return userDao.save(user);
+		return userDao.save(encryptedUser);
 	}
 
 	@Override
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public Iterable<User> getAll() {
 		return userDao.findAll();
 	}
@@ -79,6 +80,12 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findByEmail(String email) {
 		return userDao.findByEmail(email);	
+	}
+
+	@Transactional
+	@Override
+	public void makeAdmin(long userId) {
+		userDao.makeAdmin(userId);	
 	}
 	
 }

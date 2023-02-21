@@ -33,7 +33,7 @@ import link.hiroshisprojects.kaput.config.SecurityConstants;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class AppSecurityConfig {
 
-	private static final String[] PUBLIC_ENDPOINTS = {"/api/login", "/api/register"};
+	private static final String[] PUBLIC_ENDPOINTS = {"/api/login", "/api/register/**", "/api/authenticate"};
 
 	@Autowired
 	private FilterChainExceptionHandler filterChainExceptionHandler;

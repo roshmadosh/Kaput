@@ -21,4 +21,6 @@ public interface UserService {
 
 	public User findByEmail(String email);
 
+	public void makeAdmin(long userId);
+
 }

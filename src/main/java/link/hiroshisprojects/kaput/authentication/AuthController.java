@@ -1,7 +1,9 @@
 package link.hiroshisprojects.kaput.authentication;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -10,7 +12,11 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +25,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import link.hiroshisprojects.kaput.user.User;
 import link.hiroshisprojects.kaput.user.UserController;
+import link.hiroshisprojects.kaput.user.UserException;
 import link.hiroshisprojects.kaput.user.UserService;
 import link.hiroshisprojects.kaput.user.UserValidationException;
 
@@ -55,14 +62,10 @@ public class AuthController {
 	}
 
 	@PostMapping("/api/register")
-	public ResponseEntity<User> register(@Valid @RequestBody User user, @RequestParam String adminSecret) throws UserValidationException {
-			if (adminSecret.equals(ADMIN_SECRET)) {
-				user.setIsAdmin(true);
-			} else {
-				throw new UserValidationException("admin authentication failed.");
-			}
+	public ResponseEntity<User> register(@Valid @RequestBody User user) throws UserValidationException {
 		try {
 			User savedUser = userService.save(user);
+		
 			URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}")
 				.buildAndExpand(savedUser.getId())
@@ -75,4 +78,37 @@ public class AuthController {
 			throw new UserValidationException(cve.getSQLException().getLocalizedMessage());
 		}
 	}
+
+	/* Endpoint for making user an admin. */
+	@PostMapping("/api/register/admin")
+	public ResponseEntity<Map<String, Object>> authenticate(@RequestParam(required = true) Map<String, String> params)
+	throws UserException {
+
+		String adminSecret = params.get("secret");
+		long userId = Long.parseLong(params.get("userId"));
+
+		Map<String, Object> response = new HashMap<>();
+
+		if (adminSecret != null) {
+
+			if (!adminSecret.equals(ADMIN_SECRET)) 
+				throw new UserValidationException("adminSecret is not correct.");
+
+			userService.makeAdmin(userId);
+
+		}
+
+		response.put("success", true);
+		response.put("message", "User with id " + userId + " granted ADMIN priviliges.");
+		return ResponseEntity.ok().body(response);
+
+	}
+	
+	/* For obtaining JWT token after successful registration. Include an Authorization header in request so that it goes through the
+	 * JWT-generating filter. */
+	@PostMapping("/api/authenticate")
+	public void authenticate(Authentication authentication) throws UserException {
+		// TODO add to log
+	}
+	
 }
