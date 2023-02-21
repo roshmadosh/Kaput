@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -33,6 +34,7 @@ import link.hiroshisprojects.kaput.jobapplication.JobApplications;
 @RestController
 @RequestMapping(value = "/api/users", produces = "application/hal+json")
 public class UserController {
+
 
 	private UserService userService;
 	private JobApplicationService appService;

@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@PreAuthorize("hasRole('ADMIN')")
 	public Iterable<User> getAll() {
 		return userDao.findAll();
 	}

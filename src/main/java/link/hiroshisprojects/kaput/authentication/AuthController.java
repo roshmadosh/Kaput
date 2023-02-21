@@ -7,11 +7,13 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -25,6 +27,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 public class AuthController {
+
+	@Value("${admin.secret}")
+	private String ADMIN_SECRET;
 
 	private UserService userService;
 
@@ -50,7 +55,12 @@ public class AuthController {
 	}
 
 	@PostMapping("/api/register")
-	public ResponseEntity<User> register(@Valid @RequestBody User user) throws UserValidationException {
+	public ResponseEntity<User> register(@Valid @RequestBody User user, @RequestParam String adminSecret) throws UserValidationException {
+			if (adminSecret.equals(ADMIN_SECRET)) {
+				user.setIsAdmin(true);
+			} else {
+				throw new UserValidationException("admin authentication failed.");
+			}
 		try {
 			User savedUser = userService.save(user);
 			URI location = ServletUriComponentsBuilder.fromCurrentRequest()

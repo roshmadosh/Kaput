@@ -17,6 +17,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -48,6 +49,9 @@ public class User extends RepresentationModel<User> {
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@NotEmpty(message = "You must provide a password!")
 	private String password;
+
+	@ColumnDefault("false")
+	private boolean isAdmin;
 
 	@JsonIgnore
 	@OneToMany(
@@ -145,6 +149,14 @@ public class User extends RepresentationModel<User> {
 		return jobApplications;
 	}
 
+	public boolean getIsAdmin() {
+		return isAdmin;
+	}
+
+	public void setIsAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin; 
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -175,6 +187,8 @@ public class User extends RepresentationModel<User> {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName + "]";
+		return "User [id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName + ", isAdmin="
+				+ isAdmin + "]";
 	}
+
 }
