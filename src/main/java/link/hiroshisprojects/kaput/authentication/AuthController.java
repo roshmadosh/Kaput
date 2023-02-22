@@ -81,21 +81,23 @@ public class AuthController {
 
 	/* Endpoint for making user an admin. */
 	@PostMapping("/api/register/admin")
-	public ResponseEntity<Map<String, Object>> authenticate(@RequestParam(required = true) Map<String, String> params)
+	public ResponseEntity<Map<String, Object>> authenticate(@RequestBody Map<String, String> body)
 	throws UserException {
 
-		String adminSecret = params.get("secret");
-		long userId = Long.parseLong(params.get("userId"));
+		String adminSecret = body.getOrDefault("secret", null);
+		String userId = body.getOrDefault("userId", null);
 
 		Map<String, Object> response = new HashMap<>();
 
-		if (adminSecret != null) {
+		if (adminSecret != null && userId != null) {
 
 			if (!adminSecret.equals(ADMIN_SECRET)) 
 				throw new UserValidationException("adminSecret is not correct.");
 
-			userService.makeAdmin(userId);
+			userService.makeAdmin(Long.parseLong(userId));
 
+		} else {
+				throw new UserValidationException("request body fields required ['secret', 'userId']");
 		}
 
 		response.put("success", true);

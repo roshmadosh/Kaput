@@ -39,10 +39,12 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 		if (user != null) {
 			if (passwordEncoder.matches(password, user.getPassword())) {
 				List<GrantedAuthority> authorities = new ArrayList<>();
+
 				authorities.add(new SimpleGrantedAuthority("USER"));
 				if (user.getIsAdmin()) {
 					authorities.add(new SimpleGrantedAuthority("ADMIN"));
 				}
+
 				return new UsernamePasswordAuthenticationToken(String.valueOf(user.getId()), user.getPassword(), authorities);
 			} else {
 				throw new BadCredentialsException("Invalid password!");
