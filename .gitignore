@@ -38,3 +38,6 @@ out/
 
 ### vim ###
 .vim/
+
+### Logs ###
+logs/

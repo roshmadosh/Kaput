@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +39,8 @@ public class AuthController {
 
 	@Value("${admin.secret}")
 	private String ADMIN_SECRET;
+
+	private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
 	private UserService userService;
 
@@ -110,7 +114,7 @@ public class AuthController {
 	 * JWT-generating filter. */
 	@PostMapping("/api/authenticate")
 	public void authenticate(Authentication authentication) throws UserException {
-		// TODO add to log
+		LOGGER.debug(String.format("Attempt to authenticate user %s", authentication.toString()));	
 	}
 	
 }
