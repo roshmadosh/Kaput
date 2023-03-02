@@ -12,7 +12,7 @@ Requirements:
 
 Steps:
 1. Run `docker compose up`. This starts two docker instances: one for the app and another for PostgreSQL.  
-2. Then find the container id for the docker container with image name `kaput-api`.  
+2. Find the container id for the docker container with image name `kaput-api` by running `docker ps`. 
 3. Find the IP address this container is running on with `docker container inspect <the container id>`. This is the host where you will send requests to on port 8080 (e.g. http://\<container ip address\>:8080/api/users).  
 
 Will update Swagger docs with instructions on how to use API.  
