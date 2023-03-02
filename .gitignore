@@ -41,3 +41,5 @@ out/
 
 ### Logs ###
 logs/
+
+**/application-prod.properties

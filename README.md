@@ -4,22 +4,24 @@
 The app is named after the sound my car makes, which I'm hoping to replace once 
 I no longer need to use such an app.  
 
+## Setup
+
 Requirements:
-- Java 11 or Newer
-- PostgreSQL v14+ (will replace once Docker set up)
+- [Docker](https://docs.docker.com/get-docker/) Engine version 19.03.0+
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
-You will have to first create a database named `kaput` in PostgreSQL, then update the DB credentials 
-in `build.gradle` (under the liquibase task) and `application.properties`.  
+Steps:
+1. Run `docker compose up`. This starts two docker instances: one for the app and another for PostgreSQL.  
+2. Then find the container id for the docker container with image name `kaput-api`.  
+3. Find the IP address this container is running on with `docker container inspect <the container id>`. This is the host where you will send requests to on port 8080 (e.g. http://\<container ip address\>:8080/api/users).  
 
-With the DB created and credentials updated, Liquibase should read `changelog-root.xml` to initialize the 
-tables and data for you.
+Will update Swagger docs with instructions on how to use API.  
 
-Run locally by executing the command `gradlew runBoot` from the project root directory. Once the app is up and 
-running, go to `localhost:8080` from a browser.  
-
+## ERD
 Only two entites are needed for this application.  
-![entity-relationship diagram](./img/erd.png)
+![entity-relationship diagram](./img/erd.png)  
 
+##Notes  
 ### Exception Handling
 Exception handling is composed of two parts:
 1. Providing a custom exception response body
