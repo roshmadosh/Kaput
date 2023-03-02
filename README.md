@@ -11,9 +11,12 @@ Requirements:
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
 Steps:
-1. Run `docker compose up`. This starts two docker instances: one for the app and another for PostgreSQL.  
-2. Find the container id for the docker container with image name `kaput-api` by running `docker ps`. 
-3. Find the IP address this container is running on with `docker container inspect <the container id>`. This is the host where you will send requests to on port 8080 (e.g. http://\<container ip address\>:8080/api/users).  
+1. Navigate to the project's root directory and run `docker compose up`. This starts two docker instances: one for the app and another for PostgreSQL.    
+2. Find the container id for the docker container with image name `kaput-api` by running `docker ps`.   
+3. Find the IP address this container is running on with `docker container inspect <the container id>`. This is the host where you will send requests to on port 8080 (e.g. http://\<container ip address\>:8080/api/users).    
+4. To stop instances run `docker compose down`.  
+5. To delete the Docker image(s) run `docker image rm <docker image id>`.
+
 
 Will update Swagger docs with instructions on how to use API.  
 
@@ -21,7 +24,7 @@ Will update Swagger docs with instructions on how to use API.
 Only two entites are needed for this application.  
 ![entity-relationship diagram](./img/erd.png)  
 
-##Notes  
+## Notes  
 ### Exception Handling
 Exception handling is composed of two parts:
 1. Providing a custom exception response body
