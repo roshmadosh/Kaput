@@ -42,4 +42,5 @@ out/
 ### Logs ###
 logs/
 
+**/application-test.properties
 **/application-prod.properties

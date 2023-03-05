@@ -46,7 +46,7 @@ public class AppSecurityConfig {
 	private AuthenticationEntryPoint authenticationEntryPoint;
 
 	@Bean
-	@Profile("dev")
+	// @Profile("dev")
 	SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and().cors().configurationSource(new CorsConfigurationSource() {
@@ -77,16 +77,6 @@ public class AppSecurityConfig {
 		return http.build();
 	}
 
-	@Bean
-	@Profile({ "prod" })
-	SecurityFilterChain securityFilterChainProd(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-			.anyRequest().authenticated()
-			.and().formLogin()
-			.and().httpBasic();
-
-		return http.build();
-	}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {

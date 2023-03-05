@@ -1,4 +1,4 @@
-# Kaput: A Simple Web Interface for Tracking Job Applications
+# Kaput: A Simple Web Application for Tracking Job Applications
 ---
 
 The app is named after the sound my car makes, which I'm hoping to replace once 
@@ -11,11 +11,12 @@ Requirements:
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
 Steps:
-1. Navigate to the project's root directory and run `docker compose up`. This starts two docker instances: one for the app and another for PostgreSQL.    
-2. Find the container id for the docker container with image name `kaput-api` by running `docker ps`.   
-3. Find the IP address this container is running on with `docker container inspect <the container id>`. This is the host where you will send requests to on port 8080 (e.g. http://\<container ip address\>:8080/api/users).    
-4. To stop instances run `docker compose down`.  
-5. To delete the Docker image(s) run `docker image rm <docker image id>`.
+1. Run `./gradlew bootJar` on Linux/Mac or `gradlew.bat bootJar` on Windows. This builds the jar file that's used for the app's Docker container.
+2. Navigate to the project's root directory and run `docker compose up`. This starts two docker instances: one for the app and another for PostgreSQL.    
+3. Find the container id for the docker container with image name `kaput-api` by running `docker ps`.   
+4. Find the IP address this container is running on with `docker container inspect <the container id>`. This is the host where you will send requests to on port 8080 (e.g. http://\<container ip address\>:8080/api/users).    
+5. To stop instances run `docker compose down`.  
+6. To delete the Docker image(s) run `docker image rm <docker image id>`.
 
 
 Will update Swagger docs with instructions on how to use API.  
