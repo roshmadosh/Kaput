@@ -11,15 +11,11 @@ Requirements:
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
 Steps:
-1. Run `./gradlew bootJar` on Linux/Mac or `gradlew.bat bootJar` on Windows. This builds the jar file that's used for the app's Docker container.
-2. Navigate to the project's root directory and run `docker compose up`. This starts two docker instances: one for the app and another for PostgreSQL.    
-3. Find the container id for the docker container with image name `kaput-api` by running `docker ps`.   
-4. Find the IP address this container is running on with `docker container inspect <the container id>`. This is the host where you will send requests to on port 8080 (e.g. http://\<container ip address\>:8080/api/users).    
-5. To stop instances run `docker compose down`.  
-6. To delete the Docker image(s) run `docker image rm <docker image id>`.
-
-
-Will update Swagger docs with instructions on how to use API.  
+1. Navigate to project root.
+2. Run `./gradlew bootJar` on Linux/Mac or `gradlew.bat bootJar` on Windows. This builds the jar file that's used for the app's Docker container.
+3. Run `docker compose up`. This starts two docker instances: one for the app and another for PostgreSQL.    
+4. You can visit `http://localhost:8080/swagger-ui/index.html` to see Swagger docs.
+5. To stop Docker containers, run `docker compose down`.
 
 ## ERD
 Only two entites are needed for this application.  
